@@ -310,6 +310,7 @@ public abstract class MixinScorePlayerTeam extends net.minecraft.scoreboard.Team
         return MessageSinks.to(sources);
     }
 
+    @Override
     @SuppressWarnings("rawtypes")
     @Override
     public MessageSink getSinkForPlayer(EntityPlayerMP player) {

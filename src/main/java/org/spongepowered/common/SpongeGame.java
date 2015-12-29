@@ -33,22 +33,23 @@ import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Platform;
 import org.spongepowered.api.Server;
+import org.spongepowered.api.command.CommandManager;
 import org.spongepowered.api.command.SimpleCommandManager;
 import org.spongepowered.api.config.ConfigManager;
-import org.spongepowered.api.data.property.PropertyRegistry;
-import org.spongepowered.api.plugin.PluginManager;
-import org.spongepowered.api.service.ServiceManager;
-import org.spongepowered.api.command.CommandManager;
-import org.spongepowered.api.event.EventManager;
 import org.spongepowered.api.data.DataManager;
+import org.spongepowered.api.data.property.PropertyRegistry;
+import org.spongepowered.api.event.EventManager;
+import org.spongepowered.api.plugin.PluginManager;
 import org.spongepowered.api.scheduler.Scheduler;
+import org.spongepowered.api.service.ServiceManager;
 import org.spongepowered.api.world.TeleportHelper;
 import org.spongepowered.common.command.SpongeCommandDisambiguator;
-import org.spongepowered.common.data.property.SpongePropertyRegistry;
-import org.spongepowered.common.registry.SpongeGameRegistry;
 import org.spongepowered.common.config.SpongeConfigManager;
 import org.spongepowered.common.data.SpongeDataManager;
+import org.spongepowered.common.data.property.SpongePropertyRegistry;
+import org.spongepowered.common.registry.SpongeGameRegistry;
 import org.spongepowered.common.scheduler.SpongeScheduler;
+import org.spongepowered.common.world.FakePlayer;
 
 import javax.inject.Singleton;
 
@@ -143,6 +144,10 @@ public abstract class SpongeGame implements Game {
         return Objects.toStringHelper(this)
                 .add("platform", this.platform)
                 .toString();
+    }
+
+    public FakePlayer.Factory createFakePlayerFactory() {
+        return new FakePlayer.Factory();
     }
 
 }

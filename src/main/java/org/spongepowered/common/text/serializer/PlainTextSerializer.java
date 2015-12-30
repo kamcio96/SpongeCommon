@@ -22,41 +22,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.text.xml;
+package org.spongepowered.common.text.serializer;
 
-import com.google.common.collect.ImmutableList;
-import org.spongepowered.api.text.TextBuilder;
-import org.spongepowered.api.text.Texts;
-import org.spongepowered.common.text.translation.SpongeTranslation;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.serializer.SafeTextSerializer;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Locale;
 
-@XmlRootElement
-public class Tr extends Element {
+public final class PlainTextSerializer implements SafeTextSerializer {
 
-    @XmlAttribute(required = true)
-    private String key;
-
-    public Tr() {}
-
-    public Tr(String key) {
-        this.key = key;
+    @Override
+    public String serialize(Text text) {
+        return text.toPlain();
     }
 
     @Override
-    protected void modifyBuilder(TextBuilder builder) {
-        // TODO: get rid of this
+    public Text parse(String input) {
+        return Text.of(input);
     }
 
-    @Override
-    public TextBuilder toText() throws Exception {
-        ImmutableList.Builder<Object> build = ImmutableList.builder();
-        for (Object child : this.mixedContent) {
-            build.add(builderFromObject(child).build());
-        }
-        TextBuilder builder = Texts.builder(new SpongeTranslation(this.key), build.build().toArray());
-        applyTextActions(builder);
-        return builder;
-    }
 }

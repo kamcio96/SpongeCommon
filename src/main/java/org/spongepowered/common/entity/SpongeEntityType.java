@@ -24,18 +24,22 @@
  */
 package org.spongepowered.common.entity;
 
-import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 import net.minecraft.entity.Entity;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.text.translation.Translation;
+import org.spongepowered.common.SpongeCatalogType;
+import org.spongepowered.common.text.translation.SpongeTranslation;
 
-public class SpongeEntityType implements EntityType {
+public class SpongeEntityType extends SpongeCatalogType.Translatable implements EntityType {
 
     public static final EntityType UNKNOWN = new EntityType() {
 
+        private final Translation translation = new SpongeTranslation("entity.generic.name");
+
         @Override
         public Translation getTranslation() {
-            throw new UnsupportedOperationException("Unknown entity type has no translation");
+            return translation;
         }
 
         @Override
@@ -52,6 +56,7 @@ public class SpongeEntityType implements EntityType {
         public Class<? extends org.spongepowered.api.entity.Entity> getEntityClass() {
             throw new UnsupportedOperationException("Unknown entity type has no entity class");
         }
+
     };
 
     public final int entityTypeId;
@@ -63,20 +68,24 @@ public class SpongeEntityType implements EntityType {
     public int updateFrequency;
     public boolean sendsVelocityUpdates;
 
-    public SpongeEntityType(int id, String name, Class<? extends Entity> clazz) {
-        this(id, name.toLowerCase(), "minecraft", clazz);
+    public SpongeEntityType(int id, String name, Class<? extends Entity> clazz, Translation translation) {
+        this(id, name.toLowerCase(), "minecraft", clazz, translation);
     }
 
-    public SpongeEntityType(int id, String name, String modId, Class<? extends Entity> clazz) {
+    public SpongeEntityType(int id, String name, String modId, Class<? extends Entity> clazz, Translation translation) {
+        super(modId.toLowerCase() + ":" + name.toLowerCase(), check(translation));
         this.entityTypeId = id;
         this.entityName = name.toLowerCase();
         this.entityClass = clazz;
         this.modId = modId.toLowerCase();
     }
 
-    @Override
-    public String getId() {
-        return this.modId + ":" + this.entityName;
+    private static Translation check(Translation translation) {
+        if (translation == null) {
+            return UNKNOWN.getTranslation();
+        } else {
+            return translation;
+        }
     }
 
     @Override
@@ -95,41 +104,10 @@ public class SpongeEntityType implements EntityType {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final SpongeEntityType other = (SpongeEntityType) obj;
-        if (!this.entityName.equals(other.entityName)) {
-            return false;
-        } else if (!this.entityClass.equals(other.entityClass)) {
-            return false;
-        } else if (this.entityTypeId != other.entityTypeId) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return this.entityTypeId;
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("id", this.entityTypeId)
-                .add("name", this.entityName)
+    protected ToStringHelper toStringHelper() {
+        return super.toStringHelper()
                 .add("modid", this.modId)
-                .add("class", this.entityClass.getName())
-                .toString();
+                .add("class", this.entityClass.getName());
     }
 
-    @Override
-    public Translation getTranslation() {
-        return null;
-    }
 }

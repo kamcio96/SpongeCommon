@@ -34,7 +34,7 @@ import org.spongepowered.api.scoreboard.objective.Objective;
 import org.spongepowered.api.scoreboard.objective.displaymode.ObjectiveDisplayMode;
 import org.spongepowered.api.scoreboard.objective.displaymode.ObjectiveDisplayModes;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.common.interfaces.IMixinScoreObjective;
 
 import java.util.Collection;
@@ -57,7 +57,7 @@ public class SpongeObjective implements Objective {
     @SuppressWarnings("deprecation")
     public SpongeObjective(String name, Criterion criterion) {
         this.name = name;
-        this.displayName = Texts.legacy().fromUnchecked(name);
+        this.displayName = TextSerializers.LEGACY.parse(name);
         this.displayMode = ObjectiveDisplayModes.INTEGER;
         this.criterion = criterion;
     }
@@ -81,7 +81,7 @@ public class SpongeObjective implements Objective {
     @SuppressWarnings("deprecation")
     private void updateDisplayName() {
         for (ScoreObjective objective: this.objectives.values()) {
-            objective.displayName = Texts.legacy().to(this.displayName);
+            objective.displayName = TextSerializers.LEGACY.serialize(this.displayName);
             objective.theScoreboard.func_96532_b(objective); // onObjectiveModified
         }
     }
@@ -124,7 +124,8 @@ public class SpongeObjective implements Objective {
     @Override
     public void addScore(Score score) throws IllegalArgumentException {
         if (this.scores.containsKey(score.getName())) {
-            throw new IllegalArgumentException(String.format("A score with the name %s already exists!", Texts.legacy().to(score.getName())));
+            throw new IllegalArgumentException(String.format("A score with the name %s already exists!",
+                    TextSerializers.LEGACY.serialize(score.getName())));
         }
         this.scores.put(score.getName(), score);
 
@@ -230,7 +231,7 @@ public class SpongeObjective implements Objective {
         // Since a new objective is being created here, we want to avoid
         // sending packets until everything is in the proper state.
 
-        objective.displayName = Texts.legacy().to(this.displayName);
+        objective.displayName = TextSerializers.LEGACY.serialize(this.displayName);
         objective.renderType = (IScoreObjectiveCriteria.EnumRenderType) (Object) this.displayMode;
 
         ((IMixinScoreObjective) objective).setSpongeObjective(this);

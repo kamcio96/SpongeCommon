@@ -32,7 +32,7 @@ import org.spongepowered.api.data.manipulator.immutable.item.ImmutableAuthorData
 import org.spongepowered.api.data.manipulator.mutable.item.AuthorData;
 import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.common.data.manipulator.immutable.item.ImmutableSpongeAuthorData;
 import org.spongepowered.common.data.manipulator.mutable.common.AbstractSingleData;
 import org.spongepowered.common.data.util.DataConstants;
@@ -47,7 +47,7 @@ public class SpongeAuthorData extends AbstractSingleData<Text, AuthorData, Immut
     }
 
     public SpongeAuthorData() {
-        this(Texts.of());
+        this(Text.of());
     }
 
     @Override
@@ -58,12 +58,12 @@ public class SpongeAuthorData extends AbstractSingleData<Text, AuthorData, Immut
     @Override
     public DataContainer toContainer() {
         return new MemoryDataContainer()
-                .set(Keys.BOOK_AUTHOR.getQuery(), Texts.json().to(this.getValue()));
+                .set(Keys.BOOK_AUTHOR.getQuery(), TextSerializers.JSON.serialize(this.getValue()));
     }
 
     @Override
     public Value<Text> author() {
-        return new SpongeValue<>(Keys.BOOK_AUTHOR, Texts.of(), this.getValue());
+        return new SpongeValue<>(Keys.BOOK_AUTHOR, Text.of(), this.getValue());
     }
 
     @Override
@@ -79,7 +79,8 @@ public class SpongeAuthorData extends AbstractSingleData<Text, AuthorData, Immut
     @Override
     public int compareTo(AuthorData o) {
         return ComparisonChain.start()
-                .compare(Texts.json().to(o.get(Keys.BOOK_AUTHOR).get()), Texts.json().to(this.getValue()))
+                .compare(TextSerializers.JSON.serialize(o.get(Keys.BOOK_AUTHOR).get()),
+                        TextSerializers.JSON.serialize(this.getValue()))
                 .result();
     }
 

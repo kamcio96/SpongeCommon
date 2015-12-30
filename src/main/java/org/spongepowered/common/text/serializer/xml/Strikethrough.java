@@ -22,11 +22,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.interfaces.text;
+package org.spongepowered.common.text.serializer.xml;
 
-import org.spongepowered.api.text.translation.Translation;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextStyles;
 
-public interface IMixinChatComponentTranslation {
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 
-    void setTranslation(Translation translation);
+@XmlSeeAlso(Strikethrough.S.class)
+@XmlRootElement
+public class Strikethrough extends Element {
+
+    @Override
+    protected void modifyBuilder(Text.Builder builder) {
+        builder.style(TextStyles.STRIKETHROUGH);
+    }
+
+    @XmlRootElement
+    public static class S extends Strikethrough {
+
+    }
 }

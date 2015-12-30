@@ -34,8 +34,8 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.scoreboard.Team;
 import org.spongepowered.api.scoreboard.Visibility;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColor;
+import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.api.text.sink.MessageSink;
 import org.spongepowered.api.text.sink.MessageSinks;
 import org.spongepowered.asm.mixin.Implements;
@@ -48,7 +48,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.common.interfaces.IMixinTeam;
-import org.spongepowered.common.registry.type.text.TextColorsRegistryModule;
+import org.spongepowered.common.registry.type.text.TextColorRegistryModule;
 import org.spongepowered.common.text.format.SpongeTextColor;
 
 import java.util.Collection;
@@ -94,10 +94,10 @@ public abstract class MixinScorePlayerTeam extends net.minecraft.scoreboard.Team
     @Inject(method = "<init>", at = @At("RETURN"))
     public void onInit(CallbackInfo ci) {
         // Initialize cached values
-        this.displayName = Texts.legacy().fromUnchecked(this.teamNameSPT);
-        this.prefix = Texts.legacy().fromUnchecked(this.namePrefixSPT);
-        this.suffix = Texts.legacy().fromUnchecked(this.colorSuffix);
-        this.color = TextColorsRegistryModule.enumChatColor.get(this.chatFormat);
+        this.displayName = TextSerializers.LEGACY.parse(this.teamNameSPT);
+        this.prefix = TextSerializers.LEGACY.parse(this.namePrefixSPT);
+        this.suffix = TextSerializers.LEGACY.parse(this.colorSuffix);
+        this.color = TextColorRegistryModule.enumChatColor.get(this.chatFormat);
     }
 
     public String team$getName() {
@@ -109,7 +109,7 @@ public abstract class MixinScorePlayerTeam extends net.minecraft.scoreboard.Team
     }
 
     public void team$setDisplayName(Text text) {
-        String newText = Texts.legacy().to(text);
+        String newText = TextSerializers.LEGACY.serialize(text);
         if (newText.length() > 32) {
             throw new IllegalArgumentException(String.format("Display name is %s characters long! It must be at most 32.", newText.length()));
         }
@@ -133,7 +133,7 @@ public abstract class MixinScorePlayerTeam extends net.minecraft.scoreboard.Team
     }
 
     public void team$setPrefix(Text prefix) {
-        String newPrefix = Texts.legacy().to(prefix);
+        String newPrefix = TextSerializers.LEGACY.serialize(prefix);
         if (newPrefix.length() > 16) {
             throw new IllegalArgumentException(String.format("Prefix is %s characters long! It must be at most 16.", newPrefix.length()));
         }
@@ -147,7 +147,7 @@ public abstract class MixinScorePlayerTeam extends net.minecraft.scoreboard.Team
     }
 
     public void team$setSuffix(Text suffix) {
-        String newSuffix = Texts.legacy().to(suffix);
+        String newSuffix = TextSerializers.LEGACY.serialize(suffix);
         if (newSuffix.length() > 16) {
             throw new IllegalArgumentException(String.format("Suffix is %s characters long! It must be at most 16.", newSuffix.length()));
         }
@@ -193,11 +193,11 @@ public abstract class MixinScorePlayerTeam extends net.minecraft.scoreboard.Team
     }
 
     public Set<Text> team$getMembers() {
-        return this.membershipSet.stream().map((String name) -> Texts.legacy().fromUnchecked(name)).collect(Collectors.toSet());
+        return this.membershipSet.stream().map(TextSerializers.LEGACY::parse).collect(Collectors.toSet());
     }
 
     public void team$addMember(Text member) {
-        String legacyName = Texts.legacy().to(member);
+        String legacyName = TextSerializers.LEGACY.serialize(member);
         if (legacyName.length() > 16) {
             throw new IllegalArgumentException(String.format("Member is %s characters long! It must be at most 16.", legacyName.length()));
         }
@@ -209,7 +209,7 @@ public abstract class MixinScorePlayerTeam extends net.minecraft.scoreboard.Team
     }
 
     public boolean team$removeMember(Text member) {
-        String legacyName = Texts.legacy().to(member);
+        String legacyName = TextSerializers.LEGACY.serialize(member);
         if (this.theScoreboard != null) {
             return this.theScoreboard.removePlayerFromTeams(legacyName);
         } else {
@@ -238,7 +238,7 @@ public abstract class MixinScorePlayerTeam extends net.minecraft.scoreboard.Team
     @Inject(method = "setTeamName", at = @At("HEAD"))
     public void onSetTeamName(String name, CallbackInfo ci) {
         if (name != null) {
-            this.displayName = Texts.legacy().fromUnchecked(name);
+            this.displayName = TextSerializers.LEGACY.parse(name);
         }
     }
 
@@ -250,7 +250,7 @@ public abstract class MixinScorePlayerTeam extends net.minecraft.scoreboard.Team
     @Inject(method = "setNamePrefix", at = @At("HEAD"))
     public void onSetNamePrefix(String prefix, CallbackInfo ci) {
         if (prefix != null) {
-            this.prefix = Texts.legacy().fromUnchecked(prefix);
+            this.prefix = TextSerializers.LEGACY.parse(prefix);
         }
     }
 
@@ -262,7 +262,7 @@ public abstract class MixinScorePlayerTeam extends net.minecraft.scoreboard.Team
     @Inject(method = "setNameSuffix", at = @At("HEAD"))
     public void onSetNameSuffix(String suffix, CallbackInfo ci) {
         if (suffix != null) {
-            this.suffix = Texts.legacy().fromUnchecked(suffix);
+            this.suffix = TextSerializers.LEGACY.parse(suffix);
         }
     }
 
@@ -288,7 +288,7 @@ public abstract class MixinScorePlayerTeam extends net.minecraft.scoreboard.Team
 
     @Inject(method = "setChatFormat", at = @At("RETURN"))
     private void onSetChatFormat(EnumChatFormatting format, CallbackInfo ci) {
-        this.color = TextColorsRegistryModule.enumChatColor.get(format);
+        this.color = TextColorRegistryModule.enumChatColor.get(format);
         // This isn't called by Vanilla, so we inject the call ourselves.
         this.doTeamUpdate();
     }

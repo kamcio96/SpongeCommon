@@ -22,17 +22,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.text.xml;
+package org.spongepowered.common.text.serializer.xml;
 
-import org.spongepowered.api.text.TextBuilder;
-import org.spongepowered.api.text.format.TextStyles;
+import org.spongepowered.api.text.Text;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class I extends Element {
+public class Span extends Element {
     @Override
-    protected void modifyBuilder(TextBuilder builder) {
-        builder.style(TextStyles.ITALIC);
+    protected void modifyBuilder(Text.Builder builder) {
     }
 }

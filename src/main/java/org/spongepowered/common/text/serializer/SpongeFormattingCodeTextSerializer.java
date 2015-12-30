@@ -22,38 +22,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.common.text.xml;
+package org.spongepowered.common.text.serializer;
 
-import org.spongepowered.api.text.TextBuilder;
-import org.spongepowered.api.text.action.TextActions;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.serializer.FormattingCodeTextSerializer;
 
-import java.net.URL;
+import java.util.Locale;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
+public final class SpongeFormattingCodeTextSerializer implements FormattingCodeTextSerializer {
 
-@XmlRootElement
-public class A extends Element {
+    private final char formattingChar;
 
-    @XmlAttribute(required = true)
-    private URL href;
-
-    public A() {
-    }
-
-    public A(URL href) {
-        this.href = href;
+    public SpongeFormattingCodeTextSerializer(char formattingChar) {
+        this.formattingChar = formattingChar;
     }
 
     @Override
-    protected void modifyBuilder(TextBuilder builder) {
-        if (this.href == null) {
-            throw new IllegalArgumentException("href is null! Make sure it is a valid URL");
-        }
-        builder.onClick(TextActions.openUrl(this.href));
+    public char getCharacter() {
+        return this.formattingChar;
     }
 
-    public void setUrl(URL href) {
-        this.href = href;
+    @Override
+    public String serialize(Text text) {
+        return LegacyTexts.serialize(text, this.formattingChar);
     }
+
+    @Override
+    public Text parse(String input) {
+        return LegacyTexts.parse(input, this.formattingChar);
+    }
+
+    @Override
+    public String stripCodes(String text) {
+        return LegacyTexts.strip(text, this.formattingChar);
+    }
+
+    @Override
+    public String replaceCodes(String text, char to) {
+        return LegacyTexts.replace(text, this.formattingChar, to);
+    }
+
 }

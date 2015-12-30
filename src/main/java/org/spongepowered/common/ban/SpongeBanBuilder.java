@@ -34,7 +34,7 @@ import net.minecraft.server.management.IPBanEntry;
 import net.minecraft.server.management.UserListBansEntry;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.api.util.ban.Ban;
 import org.spongepowered.api.util.ban.BanType;
 import org.spongepowered.api.util.ban.BanTypes;
@@ -106,7 +106,7 @@ public class SpongeBanBuilder implements Ban.Builder {
 
     @Override
     public Ban.Builder source(@Nullable CommandSource source) {
-        this.source = source == null ? null : Texts.of(source.getName());
+        this.source = source == null ? null : Text.of(source.getName());
         return this;
     }
 
@@ -121,17 +121,19 @@ public class SpongeBanBuilder implements Ban.Builder {
         checkState(this.banType != null, "BanType cannot be null!");
         checkState(this.reason != null, "Reason cannot be null!");
 
-        String sourceName = this.source != null ? Texts.legacy().to(this.source) : null;
+        String sourceName = this.source != null ? TextSerializers.LEGACY.serialize(this.source) : null;
 
         if (this.banType == BanTypes.PROFILE) {
             checkState(this.profile != null, "User cannot be null!");
-            return (Ban) new UserListBansEntry((GameProfile) this.profile, Date.from(this.start), sourceName, this.toDate(this.end), Texts.legacy().to(this.reason));
+            return (Ban) new UserListBansEntry((GameProfile) this.profile, Date.from(this.start), sourceName, this.toDate(this.end),
+                    TextSerializers.LEGACY.serialize(this.reason));
         } else {
             checkState(this.address != null, "Address cannot be null!");
 
             // This *should* be a static method, but apparently not...
             BanList ipBans = MinecraftServer.getServer().getConfigurationManager().getBannedIPs();
-            return (Ban) new IPBanEntry(ipBans.addressToString(new InetSocketAddress(this.address, 0)), Date.from(this.start), sourceName, this.toDate(this.end), Texts.legacy().to(this.reason));
+            return (Ban) new IPBanEntry(ipBans.addressToString(new InetSocketAddress(this.address, 0)), Date.from(this.start), sourceName,
+                    this.toDate(this.end), TextSerializers.LEGACY.serialize(this.reason));
         }
     }
 

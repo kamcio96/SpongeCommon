@@ -24,31 +24,28 @@
  */
 package org.spongepowered.common.effect.particle;
 
+import com.google.common.base.Objects.ToStringHelper;
 import net.minecraft.util.EnumParticleTypes;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.data.type.NotePitch;
 import org.spongepowered.api.effect.particle.ParticleType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.util.Color;
+import org.spongepowered.common.SpongeCatalogType;
 
-
-public class SpongeParticleType implements ParticleType {
+public class SpongeParticleType extends SpongeCatalogType implements ParticleType {
 
     private EnumParticleTypes type;
     private boolean motion;
 
     public SpongeParticleType(EnumParticleTypes type, boolean motion) {
+        super(type.name());
         this.motion = motion;
         this.type = type;
     }
 
     public EnumParticleTypes getInternalType() {
         return this.type;
-    }
-
-    @Override
-    public String getId() {
-        return this.type.name();
     }
 
     @Override
@@ -59,6 +56,12 @@ public class SpongeParticleType implements ParticleType {
     @Override
     public boolean hasMotion() {
         return this.motion;
+    }
+
+    @Override
+    protected ToStringHelper toStringHelper() {
+        return super.toStringHelper()
+                .add("type", this.type);
     }
 
     public static class Colorable extends SpongeParticleType implements ParticleType.Colorable {
@@ -73,6 +76,12 @@ public class SpongeParticleType implements ParticleType {
         @Override
         public Color getDefaultColor() {
             return this.color;
+        }
+
+        @Override
+        protected ToStringHelper toStringHelper() {
+            return super.toStringHelper()
+                    .add("color", this.color);
         }
 
     }
@@ -91,6 +100,12 @@ public class SpongeParticleType implements ParticleType {
             return this.size;
         }
 
+        @Override
+        protected ToStringHelper toStringHelper() {
+            return super.toStringHelper()
+                    .add("size", this.size);
+        }
+
     }
 
     public static class Note extends SpongeParticleType implements ParticleType.Note {
@@ -107,11 +122,18 @@ public class SpongeParticleType implements ParticleType {
             return this.note;
         }
 
+        @Override
+        protected ToStringHelper toStringHelper() {
+            return super.toStringHelper()
+                    .add("note", this.note);
+        }
+
     }
 
     public static class Item extends SpongeParticleType implements ParticleType.Item {
 
-        // TODO: This should change to the sponge item stack type if a clone method available is
+        // TODO: This should change to the sponge item stack type if a clone
+        // method available is
         private net.minecraft.item.ItemStack item;
 
         public Item(EnumParticleTypes type, net.minecraft.item.ItemStack item, boolean motion) {
@@ -124,21 +146,34 @@ public class SpongeParticleType implements ParticleType {
             return (ItemStack) this.item.copy();
         }
 
+        @Override
+        protected ToStringHelper toStringHelper() {
+            return super.toStringHelper()
+                    .add("item", this.item);
+        }
+
     }
 
     public static class Block extends SpongeParticleType implements ParticleType.Block {
 
-        // TODO: This should change to the sponge item stack type if a clone method available is
-        private BlockState item;
+        // TODO: This should change to the sponge item stack type if a clone
+        // method available is
+        private BlockState block;
 
         public Block(EnumParticleTypes type, BlockState item, boolean motion) {
             super(type, motion);
-            this.item = item;
+            this.block = item;
         }
 
         @Override
         public BlockState getDefaultBlockState() {
-            return this.item;
+            return this.block;
+        }
+
+        @Override
+        protected ToStringHelper toStringHelper() {
+            return super.toStringHelper()
+                    .add("block", this.block);
         }
 
     }

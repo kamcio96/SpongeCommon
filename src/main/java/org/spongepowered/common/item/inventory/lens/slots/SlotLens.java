@@ -1,5 +1,5 @@
 /*
- * This file is part of SpongeCommon, licensed under the MIT License (MIT).
+ * This file is part of Sponge, licensed under the MIT License (MIT).
  *
  * Copyright (c) SpongePowered <https://www.spongepowered.org>
  * Copyright (c) contributors
@@ -24,14 +24,15 @@
  */
 package org.spongepowered.common.item.inventory.lens.slots;
 
+import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
 
 public interface SlotLens<TInventory, TStack> extends Lens<TInventory, TStack> {
 
-    public abstract TStack getStack(TInventory inv);
+    public abstract TStack getStack(Fabric<TInventory> inv);
 
-    public abstract boolean setStack(TInventory inv, TStack stack);
+    public abstract boolean setStack(Fabric<TInventory> inv, TStack stack);
 
-    public abstract int getOrdinal(TInventory inv);
+    public abstract int getOrdinal(Fabric<TInventory> inv);
     
 }

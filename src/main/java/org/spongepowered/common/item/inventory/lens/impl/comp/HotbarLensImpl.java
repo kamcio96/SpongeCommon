@@ -1,5 +1,5 @@
 /*
- * This file is part of SpongeCommon, licensed under the MIT License (MIT).
+ * This file is part of Sponge, licensed under the MIT License (MIT).
  *
  * Copyright (c) SpongePowered <https://www.spongepowered.org>
  * Copyright (c) contributors
@@ -30,6 +30,7 @@ import net.minecraft.item.ItemStack;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.HotbarAdapter;
+import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.comp.HotbarLens;
 
@@ -53,22 +54,26 @@ public class HotbarLensImpl extends InventoryRowLensImpl implements HotbarLens<I
     }
 
     @Override
-    public InventoryAdapter<IInventory, ItemStack> getAdapter(IInventory inv) {
-        return new HotbarAdapter(inv, this);
+    public InventoryAdapter<IInventory, ItemStack> getAdapter(Fabric<IInventory> inv, Inventory parent) {
+        return new HotbarAdapter(inv, this, parent);
     }
 
     @Override
-    public int getSelectedSlotIndex(IInventory inv) {
-        if (inv instanceof InventoryPlayer) {
-            return ((InventoryPlayer) inv).currentItem;
+    public int getSelectedSlotIndex(Fabric<IInventory> inv) {
+        for (IInventory inner : inv.allInventories()) {
+            if (inner instanceof InventoryPlayer) {
+                return ((InventoryPlayer) inner).currentItem;
+            }
         }
         return 0;
     }
 
     @Override
-    public void setSelectedSlotIndex(IInventory inv, int index) {
-        if (inv instanceof InventoryPlayer) {
-            ((InventoryPlayer) inv).currentItem = index;
+    public void setSelectedSlotIndex(Fabric<IInventory> inv, int index) {
+        for (IInventory inner : inv.allInventories()) {
+            if (inner instanceof InventoryPlayer) {
+                ((InventoryPlayer) inv).currentItem = index;
+            }
         }
     }
 

@@ -1,5 +1,5 @@
 /*
- * This file is part of SpongeCommon, licensed under the MIT License (MIT).
+ * This file is part of Sponge, licensed under the MIT License (MIT).
  *
  * Copyright (c) SpongePowered <https://www.spongepowered.org>
  * Copyright (c) contributors
@@ -28,6 +28,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
+import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.impl.collections.MutableLensCollectionImpl;
@@ -35,7 +36,6 @@ import org.spongepowered.common.item.inventory.lens.impl.struct.LensHandle;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-
 
 public abstract class MinecraftLens extends AbstractLens<IInventory, ItemStack> {
 
@@ -57,19 +57,19 @@ public abstract class MinecraftLens extends AbstractLens<IInventory, ItemStack> 
     @Override
     protected Constructor<InventoryAdapter<IInventory, ItemStack>> getAdapterCtor() throws NoSuchMethodException {
         try {
-            return (Constructor<InventoryAdapter<IInventory, ItemStack>>) this.adapterType.getConstructor(IInventory.class, this.getClass());
-        } catch (Exception ex) {
-            return (Constructor<InventoryAdapter<IInventory, ItemStack>>) this.adapterType.getConstructor(IInventory.class, Lens.class);
+            return (Constructor<InventoryAdapter<IInventory, ItemStack>>) this.adapterType.getConstructor(Fabric.class, this.getClass(), Inventory.class);
+        } catch (Exception ex1) {
+            return (Constructor<InventoryAdapter<IInventory, ItemStack>>) this.adapterType.getConstructor(Fabric.class, Lens.class, Inventory.class);
         }
     }
 
     @Override
-    public int getMaxStackSize(IInventory inv) {
-        return inv.getInventoryStackLimit();
+    public int getMaxStackSize(Fabric<IInventory> inv) {
+        return inv.getMaxStackSize();
     }
     
     @Override
-    public void invalidate(IInventory inv) {
+    public void invalidate(Fabric<IInventory> inv) {
         super.invalidate(inv);
 //        inv.markDirty();    // Adapter can decide
     }

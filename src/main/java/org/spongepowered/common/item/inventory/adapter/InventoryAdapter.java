@@ -1,5 +1,5 @@
 /*
- * This file is part of SpongeCommon, licensed under the MIT License (MIT).
+ * This file is part of Sponge, licensed under the MIT License (MIT).
  *
  * Copyright (c) SpongePowered <https://www.spongepowered.org>
  * Copyright (c) contributors
@@ -24,7 +24,9 @@
  */
 package org.spongepowered.common.item.inventory.adapter;
 
+import net.minecraft.inventory.IInventory;
 import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.observer.InventoryEventArgs;
@@ -55,5 +57,9 @@ public interface InventoryAdapter<TInventory, TStack> extends Inventory, Observe
     public abstract SlotProvider<TInventory, TStack> getSlotProvider();
     
     public abstract Lens<TInventory, TStack> getRootLens();
+
+    public abstract Fabric<IInventory> getInventory();
+
+    public abstract Inventory getChild(int index);
 
 }

@@ -1,5 +1,5 @@
 /*
- * This file is part of SpongeCommon, licensed under the MIT License (MIT).
+ * This file is part of Sponge, licensed under the MIT License (MIT).
  *
  * Copyright (c) SpongePowered <https://www.spongepowered.org>
  * Copyright (c) contributors
@@ -26,11 +26,12 @@ package org.spongepowered.common.item.inventory.lens.slots;
 
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.util.Direction;
+import org.spongepowered.common.item.inventory.lens.Fabric;
 
 public interface SidedSlotLens<TInventory, TStack> extends FilteringSlotLens<TInventory, TStack> {
 
-    public abstract boolean canAccept(ItemStack stack, Direction from);
+    public abstract boolean canAccept(Fabric<TInventory> inv, ItemStack stack, Direction from);
 
-    public abstract boolean canGet(ItemStack stack, Direction from);
+    public abstract boolean canGet(Fabric<TInventory> inv, ItemStack stack, Direction from);
 
 }

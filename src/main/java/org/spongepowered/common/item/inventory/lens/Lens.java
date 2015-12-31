@@ -1,5 +1,5 @@
 /*
- * This file is part of SpongeCommon, licensed under the MIT License (MIT).
+ * This file is part of Sponge, licensed under the MIT License (MIT).
  *
  * Copyright (c) SpongePowered <https://www.spongepowered.org>
  * Copyright (c) contributors
@@ -28,6 +28,7 @@ import gnu.trove.set.TIntSet;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryProperty;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
+import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
 
 import java.util.Collection;
 import java.util.List;
@@ -66,7 +67,7 @@ public interface Lens<TInventory, TStack> extends LensCollection<TInventory, TSt
      * 
      * @return adapter for this lens
      */
-    public abstract InventoryAdapter<TInventory, TStack> getAdapter(TInventory inv);
+    public abstract InventoryAdapter<TInventory, TStack> getAdapter(Fabric<TInventory> inv, Inventory parent);
     
     /**
      * Get the number of slots referenced by this lens
@@ -100,7 +101,7 @@ public interface Lens<TInventory, TStack> extends LensCollection<TInventory, TSt
      * @param ordinal 
      * @return the "real" slot index (ordinal), or -1 for invalid indices
      */
-    public abstract int getRealIndex(TInventory inv, int ordinal);
+    public abstract int getRealIndex(Fabric<TInventory> inv, int ordinal);
     
     /**
      * Gets the itemstack for the specified slot ordinal. Returns null if the
@@ -111,7 +112,7 @@ public interface Lens<TInventory, TStack> extends LensCollection<TInventory, TSt
      * @param ordinal slot ordinal
      * @return the item stack in the specified slot
      */
-    public abstract TStack getStack(TInventory inv, int ordinal);
+    public abstract TStack getStack(Fabric<TInventory> inv, int ordinal);
     
     /**
      * Get the maximum stack size from the target inventory
@@ -119,7 +120,7 @@ public interface Lens<TInventory, TStack> extends LensCollection<TInventory, TSt
      * @param inv
      * @return
      */
-    public abstract int getMaxStackSize(TInventory inv);
+    public abstract int getMaxStackSize(Fabric<TInventory> inv);
 
     /**
      * Get child lenses of this lens
@@ -152,13 +153,13 @@ public interface Lens<TInventory, TStack> extends LensCollection<TInventory, TSt
      * @param stack
      * @return
      */
-    public abstract boolean setStack(TInventory inv, int ordinal, TStack stack);
+    public abstract boolean setStack(Fabric<TInventory> inv, int ordinal, TStack stack);
     
     /**
      * Invalidate this lens for the supplied inventory, notify all observers
      * 
      * @param inv inventory
      */
-    public abstract void invalidate(TInventory inv);
+    public abstract void invalidate(Fabric<TInventory> inv);
 
 }

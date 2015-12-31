@@ -1,5 +1,5 @@
 /*
- * This file is part of SpongeCommon, licensed under the MIT License (MIT).
+ * This file is part of Sponge, licensed under the MIT License (MIT).
  *
  * Copyright (c) SpongePowered <https://www.spongepowered.org>
  * Copyright (c) contributors
@@ -31,6 +31,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.slots.EquipmentSlotAdapter;
+import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.slots.EquipmentSlotLens;
 
 import java.util.function.Predicate;
@@ -55,7 +56,7 @@ public class EquipmentSlotLensImpl extends FilteringSlotLensImpl implements Equi
     }
     
     @Override
-    public InventoryAdapter<IInventory, net.minecraft.item.ItemStack> getAdapter(IInventory inv) {
+    public InventoryAdapter<IInventory, net.minecraft.item.ItemStack> getAdapter(Fabric<IInventory> inv, Inventory parent) {
         return new EquipmentSlotAdapter(inv, this);
     }
 

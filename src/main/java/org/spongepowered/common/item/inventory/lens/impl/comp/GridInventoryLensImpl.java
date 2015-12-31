@@ -1,5 +1,5 @@
 /*
- * This file is part of SpongeCommon, licensed under the MIT License (MIT).
+ * This file is part of Sponge, licensed under the MIT License (MIT).
  *
  * Copyright (c) SpongePowered <https://www.spongepowered.org>
  * Copyright (c) contributors
@@ -29,6 +29,7 @@ import net.minecraft.item.ItemStack;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.GridInventoryAdapter;
+import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.comp.GridInventoryLens;
 import org.spongepowered.common.item.inventory.lens.comp.InventoryColumnLens;
@@ -105,14 +106,14 @@ public class GridInventoryLensImpl extends Inventory2DLensImpl implements GridIn
     }
     
     @Override
-    public int getRealIndex(IInventory inv, int ordinal) {
+    public int getRealIndex(Fabric<IInventory> inv, int ordinal) {
         LensHandle<IInventory, ItemStack> child = this.getLensForOrdinal(ordinal);
         return child.lens.getRealIndex(inv, ordinal - child.ordinal);
     }
 
     @Override
-    public InventoryAdapter<IInventory, ItemStack> getAdapter(IInventory inv) {
-        return new GridInventoryAdapter(inv, this);
+    public InventoryAdapter<IInventory, ItemStack> getAdapter(Fabric<IInventory> inv, Inventory parent) {
+        return new GridInventoryAdapter(inv, this, parent);
     }
     
 }

@@ -1,5 +1,5 @@
 /*
- * This file is part of SpongeCommon, licensed under the MIT License (MIT).
+ * This file is part of Sponge, licensed under the MIT License (MIT).
  *
  * Copyright (c) SpongePowered <https://www.spongepowered.org>
  * Copyright (c) contributors
@@ -29,6 +29,7 @@ import net.minecraft.item.ItemStack;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.InventoryColumnAdapter;
+import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.comp.InventoryColumnLens;
 
@@ -52,7 +53,7 @@ public class InventoryColumnLensImpl extends Inventory2DLensImpl implements Inve
     }
     
     @Override
-    public int getRealIndex(IInventory inv, int ordinal) {
+    public int getRealIndex(Fabric<IInventory> inv, int ordinal) {
         if (ordinal < 0 || ordinal >= this.size) {
             return -1;
         }
@@ -61,8 +62,8 @@ public class InventoryColumnLensImpl extends Inventory2DLensImpl implements Inve
     }
 
     @Override
-    public InventoryAdapter<IInventory, ItemStack> getAdapter(IInventory inv) {
-        return new InventoryColumnAdapter(inv, this);
+    public InventoryAdapter<IInventory, ItemStack> getAdapter(Fabric<IInventory> inv, Inventory parent) {
+        return new InventoryColumnAdapter(inv, this, parent);
     }
     
 }

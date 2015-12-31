@@ -1,5 +1,5 @@
 /*
- * This file is part of SpongeCommon, licensed under the MIT License (MIT).
+ * This file is part of Sponge, licensed under the MIT License (MIT).
  *
  * Copyright (c) SpongePowered <https://www.spongepowered.org>
  * Copyright (c) contributors
@@ -24,14 +24,17 @@
  */
 package org.spongepowered.common.item.inventory.lens.comp;
 
-import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
+import org.spongepowered.common.item.inventory.lens.Fabric;
+import org.spongepowered.common.item.inventory.lens.slots.CraftingOutputSlotLens;
 
 public interface CraftingInventoryLens<TInventory, TStack> extends GridInventoryLens<TInventory, TStack> {
     
-    public abstract SlotLens<TInventory, TStack> getOutputSlot();
+    public abstract GridInventoryLens<TInventory, TStack> getCraftingGrid();
+    
+    public abstract CraftingOutputSlotLens<TInventory, TStack> getOutputSlot();
 
-    public abstract TStack getOutputStack(TInventory inv);
+    public abstract TStack getOutputStack(Fabric<TInventory> inv);
 
-    public abstract boolean setOutputStack(TInventory inv, TStack stack);
+    public abstract boolean setOutputStack(Fabric<TInventory> inv, TStack stack);
 
 }

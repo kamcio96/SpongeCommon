@@ -1,5 +1,5 @@
 /*
- * This file is part of SpongeCommon, licensed under the MIT License (MIT).
+ * This file is part of Sponge, licensed under the MIT License (MIT).
  *
  * Copyright (c) SpongePowered <https://www.spongepowered.org>
  * Copyright (c) contributors
@@ -35,6 +35,7 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryProperty;
 import org.spongepowered.common.item.inventory.adapter.InvalidAdapterException;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
+import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.InvalidLensDefinitionException;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.MutableLensCollection;
@@ -165,7 +166,7 @@ public abstract class AbstractLens<TInventory, TStack> extends ObservableLens<TI
     
     @SuppressWarnings("unchecked")
     @Override
-    public InventoryAdapter<TInventory, TStack> getAdapter(TInventory inv) {
+    public InventoryAdapter<TInventory, TStack> getAdapter(Fabric<TInventory> inv, Inventory parent) {
         if (this.adapter != null && this.adapter == inv) {
             return this.adapter;
         }
@@ -174,13 +175,13 @@ public abstract class AbstractLens<TInventory, TStack> extends ObservableLens<TI
             return (InventoryAdapter<TInventory, TStack>) inv;
         }
 
-        return this.createAdapter(inv);
+        return this.createAdapter(inv, parent);
     }
 
-    protected InventoryAdapter<TInventory, TStack> createAdapter(TInventory inv) {
+    protected InventoryAdapter<TInventory, TStack> createAdapter(Fabric<TInventory> inv, Inventory parent) {
         try {
             Constructor<InventoryAdapter<TInventory, TStack>> ctor = this.getAdapterCtor();
-            return ctor.newInstance(this);
+            return ctor.newInstance(inv, this, parent);
         } catch (Exception ex) {
             throw new InvalidAdapterException("Adapter class does not have a constructor which accepts this lens", ex);
         }
@@ -189,7 +190,7 @@ public abstract class AbstractLens<TInventory, TStack> extends ObservableLens<TI
     protected abstract Constructor<InventoryAdapter<TInventory, TStack>> getAdapterCtor() throws NoSuchMethodException;
 
     @Override
-    public TStack getStack(TInventory inv, int ordinal) {
+    public TStack getStack(Fabric<TInventory> inv, int ordinal) {
         LensHandle<TInventory, TStack> lens = this.getLensForOrdinal(ordinal);
         if (lens == null) {
             return null;
@@ -198,7 +199,7 @@ public abstract class AbstractLens<TInventory, TStack> extends ObservableLens<TI
     }
     
     @Override
-    public boolean setStack(TInventory inv, int ordinal, TStack stack) {
+    public boolean setStack(Fabric<TInventory> inv, int ordinal, TStack stack) {
         LensHandle<TInventory, TStack> lens = this.getLensForOrdinal(ordinal);
         if (lens == null) {
             return false;
@@ -284,7 +285,7 @@ public abstract class AbstractLens<TInventory, TStack> extends ObservableLens<TI
     }        
 
     @Override
-    public void invalidate(TInventory inv) {
+    public void invalidate(Fabric<TInventory> inv) {
         this.raise(new InventoryEventArgs(Type.LENS_INVALIDATED, this));
     }
 

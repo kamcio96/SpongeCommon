@@ -1,5 +1,5 @@
 /*
- * This file is part of SpongeCommon, licensed under the MIT License (MIT).
+ * This file is part of Sponge, licensed under the MIT License (MIT).
  *
  * Copyright (c) SpongePowered <https://www.spongepowered.org>
  * Copyright (c) contributors
@@ -24,8 +24,6 @@
  */
 package org.spongepowered.common.item.inventory.lens.impl.comp;
 
-import org.spongepowered.common.item.inventory.lens.comp.GridInventoryLens;
-
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.api.item.inventory.Inventory;
@@ -33,16 +31,18 @@ import org.spongepowered.api.item.inventory.property.InventorySize;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.CraftingInventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.GridInventoryAdapter;
+import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.comp.CraftingInventoryLens;
-import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
+import org.spongepowered.common.item.inventory.lens.comp.GridInventoryLens;
+import org.spongepowered.common.item.inventory.lens.slots.CraftingOutputSlotLens;
 
 
-public class CraftingInventoryLensImpl extends GridInventoryLensImpl implements CraftingInventoryLens<IInventory, net.minecraft.item.ItemStack> {
+public class CraftingInventoryLensImpl extends GridInventoryLensImpl implements CraftingInventoryLens<IInventory, ItemStack> {
 
     private final int outputSlotIndex;
     
-    private final SlotLens<IInventory, net.minecraft.item.ItemStack> outputSlot;
+    private final CraftingOutputSlotLens<IInventory, ItemStack> outputSlot;
     
     private final GridInventoryLens<IInventory, ItemStack> craftingGrid;
 
@@ -69,7 +69,7 @@ public class CraftingInventoryLensImpl extends GridInventoryLensImpl implements 
     public CraftingInventoryLensImpl(int outputSlotIndex, int gridBase, int width, int height, int rowStride, int xBase, int yBase, Class<? extends Inventory> adapterType, SlotProvider<IInventory, ItemStack> slots) {
         super(gridBase, width, height, rowStride, xBase, yBase, adapterType, slots);
         this.outputSlotIndex = outputSlotIndex; 
-        this.outputSlot = slots.getSlot(this.outputSlotIndex);
+        this.outputSlot = (CraftingOutputSlotLens<IInventory, ItemStack>)slots.getSlot(this.outputSlotIndex);
         this.craftingGrid = new GridInventoryLensImpl(this.base, this.width, this.height, slots);
         this.size += 1; // output slot
     }
@@ -81,22 +81,27 @@ public class CraftingInventoryLensImpl extends GridInventoryLensImpl implements 
     }
     
     @Override
-    public SlotLens<IInventory, ItemStack> getOutputSlot() {
+    public GridInventoryLens<IInventory, ItemStack> getCraftingGrid() {
+        return this.craftingGrid;
+    }
+    
+    @Override
+    public CraftingOutputSlotLens<IInventory, ItemStack> getOutputSlot() {
         return this.outputSlot;
     }
 
     @Override
-    public ItemStack getOutputStack(IInventory inv) {
+    public ItemStack getOutputStack(Fabric<IInventory> inv) {
         return this.outputSlot.getStack(inv);
     }
 
     @Override
-    public boolean setOutputStack(IInventory inv, ItemStack stack) {
+    public boolean setOutputStack(Fabric<IInventory> inv, ItemStack stack) {
         return this.outputSlot.setStack(inv, stack);
     }
     
     @Override
-    public int getRealIndex(IInventory inv, int ordinal) {
+    public int getRealIndex(Fabric<IInventory> inv, int ordinal) {
         if (!this.checkOrdinal(ordinal)) {
             return -1;
         }
@@ -107,8 +112,8 @@ public class CraftingInventoryLensImpl extends GridInventoryLensImpl implements 
     }
 
     @Override
-    public InventoryAdapter<IInventory, ItemStack> getAdapter(IInventory inv) {
-        return new CraftingInventoryAdapter(inv, this);
+    public InventoryAdapter<IInventory, ItemStack> getAdapter(Fabric<IInventory> inv, Inventory parent) {
+        return new CraftingInventoryAdapter(inv, this, parent);
     }
 
 }

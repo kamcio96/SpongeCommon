@@ -1,5 +1,5 @@
 /*
- * This file is part of SpongeCommon, licensed under the MIT License (MIT).
+ * This file is part of Sponge, licensed under the MIT License (MIT).
  *
  * Copyright (c) SpongePowered <https://www.spongepowered.org>
  * Copyright (c) contributors
@@ -23,8 +23,6 @@
  * THE SOFTWARE.
  */
 package org.spongepowered.common.item.inventory.lens.slots;
-
-
 
 public interface InputSlotLens<TInventory, TStack> extends FilteringSlotLens<TInventory, TStack> {
 

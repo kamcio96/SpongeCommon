@@ -1,5 +1,5 @@
 /*
- * This file is part of SpongeCommon, licensed under the MIT License (MIT).
+ * This file is part of Sponge, licensed under the MIT License (MIT).
  *
  * Copyright (c) SpongePowered <https://www.spongepowered.org>
  * Copyright (c) contributors
@@ -29,6 +29,7 @@ import net.minecraft.item.ItemStack;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
+import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 
 
@@ -50,7 +51,7 @@ public class DefaultIndexedLens extends MinecraftLens {
     }
     
     @Override
-    public int getRealIndex(IInventory inv, int ordinal) {
+    public int getRealIndex(Fabric<IInventory> inv, int ordinal) {
         return ordinal >= this.base + this.size ? -1 : Math.max(-1, this.base + ordinal);
     }
 }

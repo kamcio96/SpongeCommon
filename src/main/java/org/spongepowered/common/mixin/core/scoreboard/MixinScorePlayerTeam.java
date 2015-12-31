@@ -312,7 +312,6 @@ public abstract class MixinScorePlayerTeam extends net.minecraft.scoreboard.Team
 
     @Override
     @SuppressWarnings("rawtypes")
-    @Override
     public MessageSink getSinkForPlayer(EntityPlayerMP player) {
         Set<CommandSource> sources = new HashSet<>();
 

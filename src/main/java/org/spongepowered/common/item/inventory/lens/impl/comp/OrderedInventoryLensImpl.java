@@ -1,5 +1,5 @@
 /*
- * This file is part of SpongeCommon, licensed under the MIT License (MIT).
+ * This file is part of Sponge, licensed under the MIT License (MIT).
  *
  * Copyright (c) SpongePowered <https://www.spongepowered.org>
  * Copyright (c) contributors
@@ -32,6 +32,7 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.OrderedInventoryAdapter;
+import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.comp.OrderedInventoryLens;
@@ -94,7 +95,7 @@ public class OrderedInventoryLensImpl extends MinecraftLens implements OrderedIn
     }
 
     @Override
-    public int getRealIndex(IInventory inv, int ordinal) {
+    public int getRealIndex(Fabric<IInventory> inv, int ordinal) {
         if (!this.checkOrdinal(ordinal)) {
             return -1;
         }
@@ -103,8 +104,8 @@ public class OrderedInventoryLensImpl extends MinecraftLens implements OrderedIn
     }
     
     @Override
-    public InventoryAdapter<IInventory, ItemStack> getAdapter(IInventory inv) {
-        return new OrderedInventoryAdapter(inv, this);
+    public InventoryAdapter<IInventory, ItemStack> getAdapter(Fabric<IInventory> inv, Inventory parent) {
+        return new OrderedInventoryAdapter(inv, this, parent);
     }
 
 }

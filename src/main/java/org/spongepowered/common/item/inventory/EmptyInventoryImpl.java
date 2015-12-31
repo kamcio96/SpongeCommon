@@ -29,8 +29,12 @@ import org.spongepowered.api.item.inventory.EmptyInventory;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryProperty;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResult;
+import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResult.Type;
 import org.spongepowered.api.text.translation.Translation;
+import org.spongepowered.common.item.inventory.observer.InventoryEventArgs;
 import org.spongepowered.common.text.translation.SpongeTranslation;
+import org.spongepowered.common.util.observer.Observer;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -38,11 +42,10 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-
 /**
  * Bottom type / empty results set for inventory queries.
  */
-public class EmptyInventoryImpl extends BaseInventoryImpl implements EmptyInventory {
+public class EmptyInventoryImpl implements EmptyInventory, Observer<InventoryEventArgs> {
     
     public static final Translation EMPTY_NAME = new SpongeTranslation("inventory.empty.title");
     
@@ -65,8 +68,10 @@ public class EmptyInventoryImpl extends BaseInventoryImpl implements EmptyInvent
         
     }
 
-    EmptyInventoryImpl(Inventory parent) {
-        super(EmptyInventoryImpl.EMPTY_NAME, parent);
+    private final Inventory parent;
+
+    public EmptyInventoryImpl(Inventory parent) {
+        this.parent = parent;
     }
 
     @Override
@@ -208,6 +213,36 @@ public class EmptyInventoryImpl extends BaseInventoryImpl implements EmptyInvent
     @Override
     public Iterator<Inventory> iterator() {
         return new EmptyIterator();
+    }
+
+    @Override
+    public Inventory parent() {
+        return this.parent;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T extends Inventory> T next() {
+        return (T) this;
+    }
+
+    @Override
+    public InventoryTransactionResult offer(ItemStack stack) {
+        return InventoryTransactionResult.builder().type(Type.FAILURE).reject(stack).build();
+    }
+
+    @Override
+    public InventoryTransactionResult set(ItemStack stack) {
+        return InventoryTransactionResult.builder().type(Type.FAILURE).reject(stack).build();
+    }
+
+    @Override
+    public Translation getName() {
+        return EmptyInventoryImpl.EMPTY_NAME;
+    }
+
+    @Override
+    public void notify(Object source, InventoryEventArgs eventArgs) {
     }
 
 }

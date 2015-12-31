@@ -1,5 +1,5 @@
 /*
- * This file is part of SpongeCommon, licensed under the MIT License (MIT).
+ * This file is part of Sponge, licensed under the MIT License (MIT).
  *
  * Copyright (c) SpongePowered <https://www.spongepowered.org>
  * Copyright (c) contributors
@@ -29,6 +29,7 @@ import net.minecraft.item.ItemStack;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.slots.SidedSlotAdapter;
+import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.slots.SidedSlotLens;
 
 
@@ -43,7 +44,7 @@ public abstract class AbstractSidedSlotLens extends SlotLensImpl implements Side
     }
     
     @Override
-    public InventoryAdapter<IInventory, ItemStack> getAdapter(IInventory inv) {
+    public InventoryAdapter<IInventory, ItemStack> getAdapter(Fabric<IInventory> inv, Inventory parent) {
         return new SidedSlotAdapter(inv, this);
     }
 

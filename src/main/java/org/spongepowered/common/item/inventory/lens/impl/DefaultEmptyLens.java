@@ -1,5 +1,5 @@
 /*
- * This file is part of SpongeCommon, licensed under the MIT License (MIT).
+ * This file is part of Sponge, licensed under the MIT License (MIT).
  *
  * Copyright (c) SpongePowered <https://www.spongepowered.org>
  * Copyright (c) contributors
@@ -32,13 +32,13 @@ import net.minecraft.item.ItemStack;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryProperty;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
+import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
 
 public class DefaultEmptyLens extends ObservableLens<IInventory, ItemStack> {
 
@@ -56,7 +56,7 @@ public class DefaultEmptyLens extends ObservableLens<IInventory, ItemStack> {
     }
 
     @Override
-    public InventoryAdapter<IInventory, ItemStack> getAdapter(IInventory inv) {
+    public InventoryAdapter<IInventory, ItemStack> getAdapter(Fabric<IInventory> inv, Inventory parent) {
         return this.adapter;
     }
 
@@ -66,22 +66,22 @@ public class DefaultEmptyLens extends ObservableLens<IInventory, ItemStack> {
     }
 
     @Override
-    public int getRealIndex(IInventory inv, int ordinal) {
+    public int getRealIndex(Fabric<IInventory> inv, int ordinal) {
         return -1;
     }
 
     @Override
-    public ItemStack getStack(IInventory inv, int ordinal) {
+    public ItemStack getStack(Fabric<IInventory> inv, int ordinal) {
         return null;
     }
     
     @Override
-    public boolean setStack(IInventory inv, int index, ItemStack stack) {
+    public boolean setStack(Fabric<IInventory> inv, int index, ItemStack stack) {
         return false;
     }
 
     @Override
-    public int getMaxStackSize(IInventory inv) {
+    public int getMaxStackSize(Fabric<IInventory> inv) {
         return 0;
     }
 
@@ -96,7 +96,7 @@ public class DefaultEmptyLens extends ObservableLens<IInventory, ItemStack> {
     }
 
     @Override
-    public void invalidate(IInventory inv) {
+    public void invalidate(Fabric<IInventory> inv) {
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * This file is part of SpongeCommon, licensed under the MIT License (MIT).
+ * This file is part of Sponge, licensed under the MIT License (MIT).
  *
  * Copyright (c) SpongePowered <https://www.spongepowered.org>
  * Copyright (c) contributors
@@ -30,6 +30,7 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.slots.InputSlotAdapter;
+import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.slots.InputSlotLens;
 
 import java.util.function.Predicate;
@@ -46,7 +47,7 @@ public class InputSlotLensImpl extends FilteringSlotLensImpl implements InputSlo
     }
     
     @Override
-    public InventoryAdapter<IInventory, net.minecraft.item.ItemStack> getAdapter(IInventory inv) {
+    public InventoryAdapter<IInventory, net.minecraft.item.ItemStack> getAdapter(Fabric<IInventory> inv, Inventory parent) {
         return new InputSlotAdapter(inv, this);
     }
 

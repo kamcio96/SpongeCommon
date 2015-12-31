@@ -1,5 +1,5 @@
 /*
- * This file is part of SpongeCommon, licensed under the MIT License (MIT).
+ * This file is part of Sponge, licensed under the MIT License (MIT).
  *
  * Copyright (c) SpongePowered <https://www.spongepowered.org>
  * Copyright (c) contributors
@@ -24,10 +24,12 @@
  */
 package org.spongepowered.common.item.inventory.lens.comp;
 
+import org.spongepowered.common.item.inventory.lens.Fabric;
+
 public interface HotbarLens<TInventory, TStack> extends InventoryRowLens<TInventory, TStack> {
 
-    public abstract int getSelectedSlotIndex(TInventory inv);
+    public abstract int getSelectedSlotIndex(Fabric<TInventory> inv);
 
-    public abstract void setSelectedSlotIndex(TInventory inv, int index);
+    public abstract void setSelectedSlotIndex(Fabric<TInventory> inv, int index);
 
 }

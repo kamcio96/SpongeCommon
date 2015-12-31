@@ -1,5 +1,5 @@
 /*
- * This file is part of SpongeCommon, licensed under the MIT License (MIT).
+ * This file is part of Sponge, licensed under the MIT License (MIT).
  *
  * Copyright (c) SpongePowered <https://www.spongepowered.org>
  * Copyright (c) contributors
@@ -32,6 +32,7 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryProperty;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.slots.SlotAdapter;
+import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.InvalidOrdinalException;
 import org.spongepowered.common.item.inventory.lens.Lens;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
@@ -60,22 +61,22 @@ public class SlotLensImpl extends MinecraftLens implements SlotLens<IInventory, 
     }
     
     @Override
-    public InventoryAdapter<IInventory, ItemStack> getAdapter(IInventory inv) {
+    public InventoryAdapter<IInventory, ItemStack> getAdapter(Fabric<IInventory> inv, Inventory parent) {
         return new SlotAdapter(inv, this);
     }
     
     @Override
-    public int getOrdinal(IInventory inv) {
+    public int getOrdinal(Fabric<IInventory> inv) {
         return this.base;
     }
     
     @Override
-    public int getRealIndex(IInventory inv, int ordinal) {
+    public int getRealIndex(Fabric<IInventory> inv, int ordinal) {
         return (ordinal != 0) ? -1 : this.getOrdinal(inv);
     }
     
     @Override
-    public ItemStack getStack(IInventory inv, int ordinal) {
+    public ItemStack getStack(Fabric<IInventory> inv, int ordinal) {
         if (ordinal != 0) {
             throw new InvalidOrdinalException("Non-zero slot ordinal");
         }
@@ -83,12 +84,12 @@ public class SlotLensImpl extends MinecraftLens implements SlotLens<IInventory, 
     }
     
     @Override
-    public ItemStack getStack(IInventory inv) {
-        return checkNotNull(inv, "Target inventory").getStackInSlot(this.base);
+    public ItemStack getStack(Fabric<IInventory> inv) {
+        return checkNotNull(inv, "Target inventory").getStack(this.base);
     }
     
     @Override
-    public boolean setStack(IInventory inv, int ordinal, ItemStack stack) {
+    public boolean setStack(Fabric<IInventory> inv, int ordinal, ItemStack stack) {
         if (ordinal != 0) {
             throw new InvalidOrdinalException("Non-zero slot ordinal");
         }
@@ -96,8 +97,8 @@ public class SlotLensImpl extends MinecraftLens implements SlotLens<IInventory, 
     }
 
     @Override
-    public boolean setStack(IInventory inv, ItemStack stack) {
-        checkNotNull(inv, "Target inventory").setInventorySlotContents(this.base, stack);
+    public boolean setStack(Fabric<IInventory> inv, ItemStack stack) {
+        checkNotNull(inv, "Target inventory").setStack(this.base, stack);
         return true;
     }
     

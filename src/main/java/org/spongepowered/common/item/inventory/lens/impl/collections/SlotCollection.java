@@ -1,5 +1,5 @@
 /*
- * This file is part of SpongeCommon, licensed under the MIT License (MIT).
+ * This file is part of Sponge, licensed under the MIT License (MIT).
  *
  * Copyright (c) SpongePowered <https://www.spongepowered.org>
  * Copyright (c) contributors
@@ -30,6 +30,7 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.common.item.inventory.adapter.impl.SlotCollectionAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.slots.SlotAdapter;
+import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.impl.slots.SlotLensImpl;
 import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
@@ -60,7 +61,7 @@ public class SlotCollection extends DynamicLensCollectionImpl implements SlotPro
         return (SlotLens<IInventory, ItemStack>) this.get(index);
     }
 
-    public Iterable<Slot> getAdapter(IInventory inv) {
+    public Iterable<Slot> getAdapter(Fabric<IInventory> inv) {
         return new SlotCollectionAdapter(inv, this);
     }
 

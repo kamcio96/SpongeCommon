@@ -1,5 +1,5 @@
 /*
- * This file is part of SpongeCommon, licensed under the MIT License (MIT).
+ * This file is part of Sponge, licensed under the MIT License (MIT).
  *
  * Copyright (c) SpongePowered <https://www.spongepowered.org>
  * Copyright (c) contributors
@@ -35,11 +35,11 @@ import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.property.SlotPos;
 import org.spongepowered.common.item.inventory.adapter.InventoryAdapter;
 import org.spongepowered.common.item.inventory.adapter.impl.comp.Inventory2DAdapter;
+import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.SlotProvider;
 import org.spongepowered.common.item.inventory.lens.comp.Inventory2DLens;
 import org.spongepowered.common.item.inventory.lens.impl.struct.LensHandle;
 import org.spongepowered.common.item.inventory.lens.slots.SlotLens;
-
 
 public class Inventory2DLensImpl extends OrderedInventoryLensImpl implements Inventory2DLens<IInventory, net.minecraft.item.ItemStack> {
     
@@ -129,7 +129,7 @@ public class Inventory2DLensImpl extends OrderedInventoryLensImpl implements Inv
     }
 
     @Override
-    public int getRealIndex(IInventory inv, int ordinal) {
+    public int getRealIndex(Fabric<IInventory> inv, int ordinal) {
         if (!this.checkOrdinal(ordinal)) {
             return -1;
         }
@@ -138,8 +138,8 @@ public class Inventory2DLensImpl extends OrderedInventoryLensImpl implements Inv
     }
     
     @Override
-    public InventoryAdapter<IInventory, ItemStack> getAdapter(IInventory inv) {
-        return new Inventory2DAdapter(inv, this);
+    public InventoryAdapter<IInventory, ItemStack> getAdapter(Fabric<IInventory> inv, Inventory parent) {
+        return new Inventory2DAdapter(inv, this, parent);
     }
 
 }

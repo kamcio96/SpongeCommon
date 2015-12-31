@@ -1,5 +1,5 @@
 /*
- * This file is part of SpongeCommon, licensed under the MIT License (MIT).
+ * This file is part of Sponge, licensed under the MIT License (MIT).
  *
  * Copyright (c) SpongePowered <https://www.spongepowered.org>
  * Copyright (c) contributors
@@ -25,24 +25,31 @@
 package org.spongepowered.common.item.inventory;
 
 import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.common.item.inventory.lens.Fabric;
 import org.spongepowered.common.item.inventory.lens.Lens;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-
 public class InventoryIterator<TInventory, TStack> implements Iterator<Inventory> {
     
     protected final List<Lens<TInventory, TStack>> children;
     
-    protected final TInventory inventory;
+    protected final Fabric<TInventory> inventory;
     
+    protected final Inventory context;
+
     protected int next = 0;
 
-    public InventoryIterator(Lens<TInventory, TStack> lens, TInventory inventory) {
+    public InventoryIterator(Lens<TInventory, TStack> lens, Fabric<TInventory> inventory) {
+        this(lens, inventory, null);
+    }
+    
+    public InventoryIterator(Lens<TInventory, TStack> lens, Fabric<TInventory> inventory, Inventory context) {
         this.children = lens.getChildren();
         this.inventory = inventory;
+        this.context = context;
     }
 
     @Override
@@ -53,7 +60,7 @@ public class InventoryIterator<TInventory, TStack> implements Iterator<Inventory
     @Override
     public Inventory next() {
         try {
-            return this.children.get(this.next++).getAdapter(this.inventory);
+            return this.children.get(this.next++).getAdapter(this.inventory, this.context);
         } catch (IndexOutOfBoundsException e) {
             throw new NoSuchElementException();
         }
